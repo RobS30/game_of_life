@@ -1,31 +1,33 @@
-
 var rows = 25;
-var columns = 25;
+var cols = 25;
 
-// intialize
-function initialize () {
-    createTable();    
+// initialize
+function initialize() {
+    createTable();
 }
 
-// lay out the board; here is where we create thetable and add it to the page
+// lay out the board
 function createTable() {
     var gridContainer = document.getElementById("gridContainer");
     if (!gridContainer) {
         // throw error
-        console.error(Problem: "no div for the grid table!")
+        console.error("Problem: no div for the grid table!");
     }
     var table = document.createElement("table");
-    for (var i=0; i<rows; row++) {
+
+    for (var i = 0; i < rows; i++) {
         var tr = document.createElement("tr");
-        for (var j=0; j<columns; columns++) {
+        for (var j = 0; j < cols; j++) {
             var cell = document.createElement("td");
-            cell.setAttribute("id", i, + "_" + j);
+            cell.setAttribute("id", i + "_" + j);
             cell.setAttribute("class", "dead");
             tr.appendChild(cell);
         }
         table.appendChild(tr);
     }
+    gridContainer.appendChild(table);
 }
 
-// starts the game when the window loads
+
+// start everything
 window.onload = initialize;
