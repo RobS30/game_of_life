@@ -1,9 +1,12 @@
 var rows = 24;
 var cols = 24;
 
+var playing = false;
+
 // initialize
 function initialize() {
     createTable();
+    setupControlButtons();
 }
 
 // lay out the board
@@ -34,6 +37,37 @@ function cellClickHandler() {
         this.setAttribute("class", "dead");
     } else {
         this.setAttribute("class", "live");
+    }
+}
+
+function setupControlButtons() {
+    // button to start
+    var startButton = document.getElementById("start");
+    startButton.onclick = startButtonHandler;
+
+    // button to clear
+    var clearButton = document.getElementById("clear");
+    clearButton.onclick = clearButtonHandler;
+}
+
+function clearButtonHandler() {
+    console.log("Clear the game: stop playing, clear the grid");
+    playing = false;
+    var startButton = document.getElementById("start");
+    startButton.innerHTML = "start";
+}
+
+function startButtonHandler() {
+    if (playing) {
+        console.log("Pause the game");
+        playing = false;
+        // this gets the value you clicked on in a click handler function
+        this.innerHTML = "continue";
+    } else {
+        console.log("Continue the game");
+        playing = true;
+        this.innerHTML = "pause";
+        play();
     }
 }
 
