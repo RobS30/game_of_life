@@ -5,6 +5,9 @@ var playing = false;
 var grid = new Array(rows);
 var nextGrid = new Array(rows);
 
+var timer;
+var reproductionTime = 100;
+
 function initializeGrids() {
     for (var i = 0; i < rows; i++) {
         grid[i] = new Array(cols);
@@ -110,6 +113,7 @@ function startButtonHandler() {
         console.log("Pause the game");
         playing = false;
         this.innerHTML = "continue";
+        clearTimeout(timer);
     } else {
         console.log("Continue the game");
         playing = true;
@@ -120,7 +124,12 @@ function startButtonHandler() {
 
 // run the life game
 function play() {
+    console.log("Play the game");
     computeNextGen();
+
+    if (playing) {
+        timer = setTimeout(play, reproductionTime);
+    }
 }
 
 function computeNextGen() {
