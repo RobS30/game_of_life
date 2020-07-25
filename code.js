@@ -19,6 +19,14 @@ function resetGrids() {
         }
     }
 }
+function copyAndResetGrid() {
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            grid[i][j] = nextGrid[i][j];
+            nextGrid[i][j] = 0;
+        }
+    }
+}
 
 // initialize
 function initialize() {
@@ -66,6 +74,19 @@ function cellClickHandler() {
     }
 }
 
+function updateView() {
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            var cell = document.getElementById(i + "_" + j);
+            if (grid[i][j] == 0) {
+                cell.setAttribute("class", "dead");
+            } else {
+                cell.setAttribute("class", "live");
+            }
+        }
+    }
+}
+
 function setupControlButtons() {
     // button to start
     var startButton = document.getElementById("start");
@@ -108,13 +129,17 @@ function computeNextGen() {
             applyRules(i, j);
         }
     }
+    // copy nextGrid to grid, and reset nextGrid
+    copyAndResetGrid();
+    // copy all 1 values to "live" in the table
+    updateView();
 }
 
-// this functon works on each cell one at a time that we pass in from computeNextGen()
-// - If a cell has fewer than two living adjacent neighbors then the cell dies, by under-population. If a cell dies, don't mark it on the second sheet.
-// - If a cell has two or three live neighbors, it lives on to the next generation, so mark it on the second sheet.
-// - If a live cell has more than three live neighbors, it dies because of overcrowding, so don't mark it on the second sheet.
-// - Finally, if any dead cell has exactly three live neighbors, it becomes a live cell by reproduction, so mark it as live on the second sheet.
+// RULES
+// Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+// Any live cell with two or three live neighbours lives on to the next generation.
+// Any live cell with more than three live neighbours dies, as if by overcrowding.
+// Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 function applyRules(row, col) {
     var numNeighbors = countNeighbors(row, col);
     if (grid[row][col] == 1) {
@@ -131,8 +156,6 @@ function applyRules(row, col) {
         }
     }
 }
-
-
 
 function countNeighbors(row, col) {
     var count = 0;
