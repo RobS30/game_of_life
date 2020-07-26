@@ -1,5 +1,7 @@
 # game_of_life
 
+Play here: https://robs30.github.io/game_of_life/
+
 This is a one-page browser-based app that implements the Game of Life.  Each square in our grid can hold a living cell.  For every square on the grid, the cell can be in one of the two states: living or dead.  If the square holds a living cell, it is filled in.  Otherwise, it is blank.
 
 - If a cell has fewer than two living adjacent neighbors then the cell dies, by under-population. If a cell dies, don't mark it on the second sheet.
