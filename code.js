@@ -105,6 +105,27 @@ function clearButtonHandler() {
     playing = false;
     var startButton = document.getElementById("start");
     startButton.innerHTML = "start";
+
+    clearTimeout(timer);
+
+    var cellsList = document.getElementsByClassName("live");
+    var cells = [];
+    for (var i = 0; i < cellsList.length; i++) {
+        cells.push(cellsList[i]);
+    }
+    for (var i = 0; i < cells.length; i ++) {
+        cells[i].setAttribute("class", "dead");
+    }
+    resetGrids();
+}
+
+function resetGrids() {
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < columns; j++) {
+            grid[i][j] = 0; 
+            nextGrid[i][j] = 0;
+        }
+    }
 }
 
 // start/pause/continue the game
