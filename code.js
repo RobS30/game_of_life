@@ -1,12 +1,11 @@
 var rows = 24;
 var cols = 24;
 var playing = false;
+var timer;
+var reproductionTime = 100;
 
 var grid = new Array(rows);
 var nextGrid = new Array(rows);
-
-var timer;
-var reproductionTime = 100;
 
 function initializeGrids() {
     for (var i = 0; i < rows; i++) {
@@ -61,7 +60,6 @@ function createTable() {
     }
     gridContainer.appendChild(table);
 }
-
 function cellClickHandler() {
     var rowcol = this.id.split("_");
     var row = rowcol[0];
@@ -98,34 +96,46 @@ function setupControlButtons() {
     // button to clear
     var clearButton = document.getElementById("clear");
     clearButton.onclick = clearButtonHandler;
+
+    // button to set random initial state
+    var randomButton = document.getElementById("random");
+    randomButton.onclick = randomButtonHandler;
+}
+
+function randomButtonHandler() {
+    if (playing) return;
+    clearButtonHandler();
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            var isLive = Math.round(Math.random());
+            if (isLive == 1) {
+                var cell = document.getElementById(i + "_" + j);
+                cell.setAttribute("class", "live");
+                grid[i][j] = 1;
+            }
+        }
+    }
 }
 
 function clearButtonHandler() {
     console.log("Clear the game: stop playing, clear the grid");
+
     playing = false;
     var startButton = document.getElementById("start");
     startButton.innerHTML = "start";
-
     clearTimeout(timer);
 
     var cellsList = document.getElementsByClassName("live");
+    // convert to array first, otherwise, you're working on a live node list
+    // and the update doesn't work!
     var cells = [];
     for (var i = 0; i < cellsList.length; i++) {
         cells.push(cellsList[i]);
     }
-    for (var i = 0; i < cells.length; i ++) {
+    for (var i = 0; i < cells.length; i++) {
         cells[i].setAttribute("class", "dead");
     }
     resetGrids();
-}
-
-function resetGrids() {
-    for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < columns; j++) {
-            grid[i][j] = 0; 
-            nextGrid[i][j] = 0;
-        }
-    }
 }
 
 // start/pause/continue the game
@@ -137,21 +147,21 @@ function startButtonHandler() {
         clearTimeout(timer);
     } else {
         console.log("Continue the game");
+        // updateView(); ??
         playing = true;
         this.innerHTML = "pause";
-        play();
+        play(); 
     }
 }
 
 // run the life game
 function play() {
-    console.log("Play the game");
     computeNextGen();
-
     if (playing) {
         timer = setTimeout(play, reproductionTime);
     }
 }
+
 
 function computeNextGen() {
     for (var i = 0; i < rows; i++) {
@@ -159,7 +169,7 @@ function computeNextGen() {
             applyRules(i, j);
         }
     }
-    // copy nextGrid to grid, and reset nextGrid
+    // clear out the current array
     copyAndResetGrid();
     // copy all 1 values to "live" in the table
     updateView();
@@ -215,7 +225,6 @@ function countNeighbors(row, col) {
     }
     return count;
 }
-
 
 // start everything
 
